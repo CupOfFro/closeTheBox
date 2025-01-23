@@ -67,6 +67,24 @@ fn main() {
     let dsum = d1 + d2;
     println!( "d1: {d1} d2: {d2} sum:{dsum}" );
 
-    // let mut selections = String::new();
-    // io::stdin().read_line( &,ut selections ).expect( "Failed to read line" );
+    // Get player input
+    // Create a mut String
+    let mut selections = String::new();
+    // Use thestd library to read into that string
+    io::stdin().read_line( &mut selections ).expect( "Failed to read line" );
+    // Print it
+    println!( "{}", selections );
+    // Split the string up
+    let selections = selections.split_whitespace();
+    // now we can iterate through it
+    for num in selections {
+        let num: u8 = match num.trim().parse()
+        {
+            Ok( num ) => {
+                println!( "{num}" );
+                num
+            }
+            Err(_) => 0
+        };
+    }
 }
