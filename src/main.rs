@@ -2,56 +2,71 @@ use std::io;
 use std::cmp::Ordering;
 use rand::Rng;
 
-fn main() {
-    // Make the box
-    let mut game_box: [ bool; 10 ] = [ true; 10 ];
-    // main_game_loop
-    loop {
-        let d1 = rand::thread_rng().gen_range( 1..=6 );
-        let d2 = rand::thread_rng().gen_range( 1..=6 );
-        let sum = d1 + d2;
+/*
+I need these two traits to use the enum as an array element
+*/
+#[derive(Copy, Clone)]
+// Below is my Tile enum. A tile can be active or inactive
+enum Tile {
+    Active,
+    Inactive
+}
 
-        // player_input
-        loop {
-            println!( "d1:{d1}, d2:{d2}, sum:{sum}" );
+// My struct for the gameboard. It holds 9 Tiles
+struct GameBox {
+    tiles: [ Tile; 9 ]
+}
 
-            let mut choice1 = String::new();
-            let mut choice2 = String::new();
-            println!( "Enter choice 1" );
-            io::stdin().read_line( &mut choice1 ).expect( "Failed to read line" );
-            println!( "Enter choice 2" );
-            io::stdin().read_line( &mut choice2 ).expect( "Failed to read line" );
-
-            let choice1: u32 = match choice1.trim().parse()
-            {
-                Ok( num ) => num,
-                Err( _ ) => {
-                    println!( "Invalid choice 1! Re-enter!" );
-                    continue
-                }
-            };
-
-            let choice2: u32 = match choice2.trim().parse()
-            {
-                Ok( num ) => num,
-                Err( _ ) => {
-                    println!( "Invalid choice 2! Re-enter!" );
-                    continue
-                }
-            };
-
-            let player_sum = choice1 + choice2;
-            match player_sum.cmp( &sum )
-            {
-                Ordering::Equal => (), // Do nothing and continue
-                _ => {
-                    println!( "Player sum does not match dice!" );
-                    continue
-                }
-            }
-
-            // println!( "{}", game_box[ choice1 ] );
-            // println!( "{}", game_box[ choice2 ] );
+impl GameBox {
+    // Create a new gameboard and return self
+    fn init() -> Self {
+        Self {
+            tiles: [ Tile::Active; 9 ]
         }
     }
+
+    fn print_active_tiles( &self ) {
+        print!( "  Active Tiles:" );
+        for (i, t) in self.tiles.iter().enumerate() {
+            match t {
+                Tile::Active =>{
+                    let tile_index = i + 1;
+                    print!( " {tile_index}" )
+                }
+                // Tile::Inactive => ()
+                _ => ()
+            }
+        }
+        println!( "" );
+    }
+
+    fn print_inactive_tiles( &self ) {
+        print!( "Inactive Tiles:" );
+        for ( i, t ) in self.tiles.iter().enumerate() {
+            match t {
+                Tile::Inactive => {
+                    let tile_index = i + 1;
+                    print!( "{tile_index}" );
+                }
+                // This is short hand for match anything else and do nothing
+                _ => ()
+            }
+        }
+        println!( "" );
+    }
+}
+
+fn main() {
+    // Make the box
+    let mut game_box: GameBox = GameBox::init();
+    game_box.print_active_tiles();
+    game_box.print_inactive_tiles();
+
+    let d1 = rand::thread_rng().gen_range( 1..=6 );
+    let d2 = rand::thread_rng().gen_range( 1..=6 );
+    let dsum = d1 + d2;
+    println!( "d1: {d1} d2: {d2} sum:{dsum}" );
+
+    // let mut selections = String::new();
+    // io::stdin().read_line( &,ut selections ).expect( "Failed to read line" );
 }
