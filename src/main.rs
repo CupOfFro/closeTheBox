@@ -3,12 +3,16 @@ use std::cmp::Ordering;
 use rand::Rng;
 
 fn main() {
-    'main_game_loop: loop {
+    // Make the box
+    let mut game_box: [ bool; 10 ] = [ true; 10 ];
+    // main_game_loop
+    loop {
         let d1 = rand::thread_rng().gen_range( 1..=6 );
         let d2 = rand::thread_rng().gen_range( 1..=6 );
         let sum = d1 + d2;
 
-        'player_input: loop {
+        // player_input
+        loop {
             println!( "d1:{d1}, d2:{d2}, sum:{sum}" );
 
             let mut choice1 = String::new();
@@ -22,7 +26,7 @@ fn main() {
             {
                 Ok( num ) => num,
                 Err( _ ) => {
-                    println!( "Invalid choice 2! Re-enter!" );
+                    println!( "Invalid choice 1! Re-enter!" );
                     continue
                 }
             };
@@ -39,12 +43,15 @@ fn main() {
             let player_sum = choice1 + choice2;
             match player_sum.cmp( &sum )
             {
-                Ordering::Equal => break,
+                Ordering::Equal => (), // Do nothing and continue
                 _ => {
                     println!( "Player sum does not match dice!" );
                     continue
                 }
             }
+
+            // println!( "{}", game_box[ choice1 ] );
+            // println!( "{}", game_box[ choice2 ] );
         }
     }
 }
