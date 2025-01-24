@@ -46,7 +46,7 @@ impl GameBox {
             match t {
                 Tile::Inactive => {
                     let tile_index = i + 1;
-                    print!( "{tile_index}" );
+                    print!( " {tile_index}" );
                 }
                 // This is short hand for match anything else and do nothing
                 _ => ()
@@ -82,9 +82,10 @@ fn main() {
         let d1 = rand::thread_rng().gen_range( 1..=6 );
         let d2 = rand::thread_rng().gen_range( 1..=6 );
         let dice_total = d1 + d2;
-        println!( "d1: {d1} d2: {d2} sum: {dice_total}" );
 
-        loop {
+        'player_entry : loop {
+            println!( "" );
+            println!( "d1: {d1} d2: {d2} sum: {dice_total}" );
             println!( "Enter up to 3 numbers that add up to the dice sum" );
             // Get player input
             // Create a mut String
@@ -97,7 +98,10 @@ fn main() {
             // Split the string up
             let selections = selections.split_whitespace();
             let mut number_of_entries = 0;
-            let mut player_total = 0;
+            let mut player_total: usize = 0;
+            // For storing and comparing dice entries for duplicates
+            let mut player_entries: [ usize; 4 ] = [ 0; 4 ];
+            let mut input_index = 0;
             // now we can iterate through it
             for num in selections {
                 number_of_entries += 1;
@@ -105,10 +109,12 @@ fn main() {
                     println!( "Too many values entered! Must be 4 or less!" );
                     break;
                 }
-                let num: u8 = match num.trim().parse()
+                let num: usize = match num.trim().parse()
                 {
                     Ok( num ) => {
-                        println!( "{num}" );
+                        // println!( "{num}" );
+                        player_entries[ input_index ] = num;
+                        input_index += 1;
                         num
                     }
                     Err(_) => {
@@ -118,9 +124,33 @@ fn main() {
                 };
                 player_total += num;
             }
+
+            // Check for duplicates
+            for ( i, val ) in player_entries.iter().enumerate() {
+                for j in i+1..4
+                {
+                    if *val == player_entries[ j ] {
+                        if *val == 0 || player_entries[ j ] == 0 {
+                            continue;
+                        }
+                        println!( "duplicate detected! {val} and {}", player_entries[j] );
+                        break 'player_entry;
+                    }
+                }
+            }
             
             if player_total == dice_total {
+                for val in player_entries {
+                    println!( "{val}" );
+                    if val == 0 {
+                        continue;
+                    }
+                    game_box.tiles[ val - 1 ] = Tile::Inactive;
+                }
                 break;
+            }
+            else {
+                println!( "Entry did no add up to dice sum!" );
             }
         }
     }
