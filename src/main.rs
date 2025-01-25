@@ -113,6 +113,14 @@ fn main() {
     // Make the box
     let mut game_box: GameBox = GameBox::init();
 
+    println!( "Welcome to Close the Box!" );
+    println!( "The objective is to move all tiles to the inactive position." );
+    println!( "To move a tile to inactive, pick 1, 2, or 3 tiles that add to the sum of the dice roll." );
+    println!( "Enter the tiles you want to select by typing in the numbers separated by a space and then hit 'Enter'." );
+    println!( "i.e. 1 2 3" );
+    println!( "Good luck!" );
+    println!( "" );
+
     loop {
         if game_box.get_number_of_active_tiles() == 0 {
             println!( "YOU WIN!" );
