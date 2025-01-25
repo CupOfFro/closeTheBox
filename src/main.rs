@@ -93,15 +93,15 @@ impl GameBox {
                         // println!( "{} {} {} matches!", i+1, j+1, k+1 );
                         return 1
                     }
-                    for l in k+1..self.tiles.len() {
-                        if self.tiles[ l ] == Tile::Inactive {
-                            continue;
-                        }
-                        if i + 1 + j + 1 + k + 1 + l + 1 == *dice_roll {
-                            // println!( "{} {} {} {} matches!", i+1, j+1, k+1, l+1 );
-                            return 1
-                        }
-                    }
+                    // for l in k+1..self.tiles.len() {
+                    //     if self.tiles[ l ] == Tile::Inactive {
+                    //         continue;
+                    //     }
+                    //     if i + 1 + j + 1 + k + 1 + l + 1 == *dice_roll {
+                    //         // println!( "{} {} {} {} matches!", i+1, j+1, k+1, l+1 );
+                    //         return 1
+                    //     }
+                    // }
                 }
             }
         }
@@ -124,6 +124,7 @@ fn main() {
         if  game_box.tiles[ 8 ] == Tile::Inactive && game_box.tiles[ 7 ] == Tile::Inactive && game_box.tiles[ 6 ] == Tile::Inactive {
 
             loop {
+                println!( "" );
                 println!( "You got rid of 7, 8, and 9! You can now roll 1 or 2 dice!" );
                 game_box.print_active_tiles();
                 game_box.print_inactive_tiles();
@@ -140,7 +141,12 @@ fn main() {
                         continue;
                     }
                 };
-                break;
+                if amount_of_dice == 1 || amount_of_dice == 2 {
+                    break;
+                }
+                else {
+                    println!( "Value must be 1 or 2!" );
+                }
             }
         }
 
@@ -165,7 +171,8 @@ fn main() {
                 println!( "" );
                 game_box.print_active_tiles();
                 game_box.print_inactive_tiles();
-                println!( "d1: {d1} d2: {d2} sum: {dice_total}" );
+                println!( "(d1: {d1}) + (d2: {d2}) = (sum: {dice_total})" );
+                println!( "No available moves!" );
                 println!{ "You lose!" };
                 break
             }
@@ -176,8 +183,8 @@ fn main() {
             println!( "" );
             game_box.print_active_tiles();
             game_box.print_inactive_tiles();
-            println!( "d1: {d1}, d2: {d2}, sum: {dice_total}" );
-            println!( "Enter up to 3 numbers that add up to the dice sum" );
+            println!( "(d1: {d1}) + (d2: {d2}) = (sum: {dice_total})" );
+            println!( "Enter up to 3 numbers that add up to the dice sum {dice_total}." );
             // Get player input
             // Create a mut String
             let mut selections = String::new();
@@ -248,4 +255,9 @@ fn main() {
             }
         }
     }
+
+    println!( "" );
+    println!( "Press 'Enter' to exit" );
+    let mut pause = String::new();
+    io::stdin().read_line( &mut pause ).expect( "Failed to read line" );
 }
