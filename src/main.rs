@@ -1,6 +1,6 @@
 use std::io;
-use std::cmp::Ordering;
 use rand::Rng;
+// use std::cmp::Ordering;
 
 /*
 I need these two traits to use the enum as an array element
@@ -64,6 +64,44 @@ impl GameBox {
         }
         count
     }
+
+    // This function will take the dice roll, and see if any 1, 2, 3, or 4
+    // combinations of tiles can add to the dice sum
+    fn check_if_possible( &self, dice_roll: &usize ) -> u8 {
+        for i in 0..self.tiles.len() {
+            if self.tiles[ i ] == Tile::Inactive {
+                continue;
+            }
+            if i == *dice_roll {
+                return 1
+            }
+            for j in i+1..self.tiles.len() {
+                if self.tiles[ j ] == Tile::Inactive {
+                    continue;
+                }
+                if i + 1 + j + 1 == *dice_roll {
+                    return 1
+                }
+                for k in j+1..self.tiles.len() {
+                    if self.tiles[ k ] == Tile::Inactive {
+                        continue;
+                    }
+                    if i + 1 + j + 1 + k + 1 == *dice_roll {
+                        return 1
+                    }
+                    for l in k+1..self.tiles.len() {
+                        if self.tiles[ l ] == Tile::Inactive {
+                            continue;
+                        }
+                        if i + 1 + j + 1 + k + 1 + l + 1 == *dice_roll {
+                            return 1
+                        }
+                    }
+                }
+            }
+        }
+        0
+    }
 }
 
 fn main() {
@@ -76,16 +114,24 @@ fn main() {
             break;
         }
 
-        game_box.print_active_tiles();
-        game_box.print_inactive_tiles();
-
         let d1 = rand::thread_rng().gen_range( 1..=6 );
         let d2 = rand::thread_rng().gen_range( 1..=6 );
         let dice_total = d1 + d2;
 
+        match game_box.check_if_possible( &dice_total )  {
+            0 => {
+                println!( "d1: {d1} d2: {d2} sum: {dice_total}" );
+                println!{ "You lose!" };
+                break
+            }
+            _ => ()
+        }
+
         'player_entry : loop {
             println!( "" );
-            println!( "d1: {d1} d2: {d2} sum: {dice_total}" );
+            game_box.print_active_tiles();
+            game_box.print_inactive_tiles();
+            println!( "d1: {d1}, d2: {d2}, sum: {dice_total}" );
             println!( "Enter up to 3 numbers that add up to the dice sum" );
             // Get player input
             // Create a mut String
@@ -141,16 +187,19 @@ fn main() {
             
             if player_total == dice_total {
                 for val in player_entries {
-                    println!( "{val}" );
+                    // println!( "{val}" );
                     if val == 0 {
                         continue;
                     }
+                    // Arrays are 0 based, but our tiles are 1 based
+                    // so we need to subtract 1 from what tile the player
+                    // entered to "flip" it
                     game_box.tiles[ val - 1 ] = Tile::Inactive;
                 }
                 break;
             }
             else {
-                println!( "Entry did no add up to dice sum!" );
+                println!( "Entry did not add up to dice sum!" );
             }
         }
     }
