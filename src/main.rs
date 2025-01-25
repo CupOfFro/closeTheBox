@@ -68,7 +68,7 @@ impl GameBox {
     // This function will take the dice roll, and see if any 1, 2, 3, or 4
     // combinations of tiles can add to the dice sum
     fn check_if_possible( &self, dice_roll: &usize ) -> u8 {
-        println!( "Checking for {dice_roll}" );
+        // println!( "Checking for {dice_roll}" );
         for i in 0..self.tiles.len() {
             if self.tiles[ i ] == Tile::Inactive {
                 continue;
