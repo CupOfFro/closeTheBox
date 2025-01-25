@@ -68,11 +68,13 @@ impl GameBox {
     // This function will take the dice roll, and see if any 1, 2, 3, or 4
     // combinations of tiles can add to the dice sum
     fn check_if_possible( &self, dice_roll: &usize ) -> u8 {
+        println!( "Checking for {dice_roll}" );
         for i in 0..self.tiles.len() {
             if self.tiles[ i ] == Tile::Inactive {
                 continue;
             }
-            if i == *dice_roll {
+            if i + 1 == *dice_roll {
+                // println!( "{} matches!", i+1 );
                 return 1
             }
             for j in i+1..self.tiles.len() {
@@ -80,6 +82,7 @@ impl GameBox {
                     continue;
                 }
                 if i + 1 + j + 1 == *dice_roll {
+                    // println!( "{} {} matches!", i+1, j+1 );
                     return 1
                 }
                 for k in j+1..self.tiles.len() {
@@ -87,6 +90,7 @@ impl GameBox {
                         continue;
                     }
                     if i + 1 + j + 1 + k + 1 == *dice_roll {
+                        // println!( "{} {} {} matches!", i+1, j+1, k+1 );
                         return 1
                     }
                     for l in k+1..self.tiles.len() {
@@ -94,6 +98,7 @@ impl GameBox {
                             continue;
                         }
                         if i + 1 + j + 1 + k + 1 + l + 1 == *dice_roll {
+                            // println!( "{} {} {} {} matches!", i+1, j+1, k+1, l+1 );
                             return 1
                         }
                     }
@@ -114,12 +119,52 @@ fn main() {
             break;
         }
 
-        let d1 = rand::thread_rng().gen_range( 1..=6 );
-        let d2 = rand::thread_rng().gen_range( 1..=6 );
-        let dice_total = d1 + d2;
+        let mut amount_of_dice = 2;
 
+        if  game_box.tiles[ 8 ] == Tile::Inactive && game_box.tiles[ 7 ] == Tile::Inactive && game_box.tiles[ 6 ] == Tile::Inactive {
+
+            loop {
+                println!( "You got rid of 7, 8, and 9! You can now roll 1 or 2 dice!" );
+                game_box.print_active_tiles();
+                game_box.print_inactive_tiles();
+
+                let mut amount_of_dice_string = String::new();
+                io::stdin().read_line( &mut amount_of_dice_string ).expect( "Failed to read line" );
+                amount_of_dice = match amount_of_dice_string.trim().parse()
+                {
+                    Ok( amount_of_dice ) => {
+                        amount_of_dice
+                    }
+                    Err(_) => {
+                        println!( "{amount_of_dice} was not a valid number! Enter 1 or 2." );
+                        continue;
+                    }
+                };
+                break;
+            }
+        }
+
+        let d1: usize;
+        let d2: usize;
+        let dice_total: usize;
+
+        match amount_of_dice {
+            2 => {
+                d1 = rand::thread_rng().gen_range( 1..=6 );
+                d2 = rand::thread_rng().gen_range( 1..=6 );
+                dice_total = d1 + d2;
+            }
+            _ => {
+                d1 = rand::thread_rng().gen_range( 1..=6 );
+                d2 = 0;
+                dice_total = d1 + d2;
+            }
+        }
         match game_box.check_if_possible( &dice_total )  {
             0 => {
+                println!( "" );
+                game_box.print_active_tiles();
+                game_box.print_inactive_tiles();
                 println!( "d1: {d1} d2: {d2} sum: {dice_total}" );
                 println!{ "You lose!" };
                 break
