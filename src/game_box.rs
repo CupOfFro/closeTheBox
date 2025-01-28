@@ -107,7 +107,7 @@ impl GameBox {
     a single die
     */
     pub fn check_if_single_die_possible( &self ) -> bool {
-        for t in &self.tiles[ 7.. ] {
+        for t in &self.tiles[ 6.. ] {
             if *t == Tile::Active {
                 return false
             }
