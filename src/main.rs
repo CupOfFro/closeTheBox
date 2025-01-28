@@ -28,13 +28,21 @@ fn main() {
         io::stdin().read_line( &mut game_board_size_input ).expect( "Failed to read line" );
         game_board_size = match game_board_size_input.trim().parse() {
             Ok( game_board_size ) => {
-                game_board_size
+                if game_board_size >= 9 && game_board_size <= 12 {
+                    game_board_size
+                }
+                else {
+                    println!( "Game board size must be between 1 and 12!" );
+                    continue;
+                }
             }
             Err( _ ) => {
                 println!( "Did not get a number!" );
                 continue;
             }
         };
+        // range check
+        
         break;
     }
 
