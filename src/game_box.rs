@@ -17,14 +17,14 @@ pub enum Tile {
 
 // My struct for the gameboard. It holds 9 Tiles
 pub struct GameBox {
-    pub tiles: [ Tile; 9 ]
+    pub tiles: Vec< Tile >
 }
 
 impl GameBox {
     // Create a new gameboard and return self
     pub fn init() -> Self {
         Self {
-            tiles: [ Tile::Active; 9 ]
+            tiles: vec![ Tile::Active; 9 ]
         }
     }
 
@@ -60,8 +60,8 @@ impl GameBox {
 
     pub fn get_number_of_active_tiles( &self ) -> i32 {
         let mut count = 0;
-        for i in self.tiles {
-            if i == Tile::Active {
+        for i in &self.tiles {
+            if *i == Tile::Active {
                 count += 1;
             }
         }
@@ -96,15 +96,6 @@ impl GameBox {
                         // println!( "{} {} {} matches!", i+1, j+1, k+1 );
                         return 1
                     }
-                    // for l in k+1..self.tiles.len() {
-                    //     if self.tiles[ l ] == Tile::Inactive {
-                    //         continue;
-                    //     }
-                    //     if i + 1 + j + 1 + k + 1 + l + 1 == *dice_roll {
-                    //         // println!( "{} {} {} {} matches!", i+1, j+1, k+1, l+1 );
-                    //         return 1
-                    //     }
-                    // }
                 }
             }
         }
