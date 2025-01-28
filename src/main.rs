@@ -11,8 +11,7 @@ mod game_box;
 use crate::game_box::{ GameBox, Tile };
 
 fn main() {
-    // Make the box
-    let mut game_box: GameBox = GameBox::init();
+    
 
     println!( "Welcome to Close the Box!" );
     println!( "The objective is to move all tiles to the inactive position." );
@@ -21,6 +20,26 @@ fn main() {
     println!( "i.e. 1 2 3" );
     println!( "Good luck!" );
     println!( "" );
+
+    let game_board_size: usize;
+    loop {
+        println!( "Enter game board size 9(default) - 12" );
+        let mut game_board_size_input = String::new();
+        io::stdin().read_line( &mut game_board_size_input ).expect( "Failed to read line" );
+        game_board_size = match game_board_size_input.trim().parse() {
+            Ok( game_board_size ) => {
+                game_board_size
+            }
+            Err( _ ) => {
+                println!( "Did not get a number!" );
+                continue;
+            }
+        };
+        break;
+    }
+
+    // Make the box
+    let mut game_box: GameBox = GameBox::init( game_board_size );
 
     loop {
         if game_box.get_number_of_active_tiles() == 0 {

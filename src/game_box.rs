@@ -22,9 +22,9 @@ pub struct GameBox {
 
 impl GameBox {
     // Create a new gameboard and return self
-    pub fn init() -> Self {
+    pub fn init( game_board_size: usize ) -> Self {
         Self {
-            tiles: vec![ Tile::Active; 9 ]
+            tiles: vec![ Tile::Active; game_board_size ]
         }
     }
 
