@@ -101,4 +101,18 @@ impl GameBox {
         }
         0
     }
+
+    /*
+    If all values above 6 are inactive, the player can decide to roll
+    a single die
+    */
+    pub fn check_if_single_die_possible( &self ) -> bool {
+        for t in &self.tiles[ 7.. ] {
+            if *t == Tile::Active {
+                return false
+            }
+        }
+
+        true
+    }
 }

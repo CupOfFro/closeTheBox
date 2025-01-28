@@ -49,11 +49,11 @@ fn main() {
 
         let mut amount_of_dice = 2;
 
-        if  game_box.tiles[ 8 ] == Tile::Inactive && game_box.tiles[ 7 ] == Tile::Inactive && game_box.tiles[ 6 ] == Tile::Inactive {
+        if  game_box.check_if_single_die_possible() {
 
             loop {
                 println!( "" );
-                println!( "You got rid of 7, 8, and 9! You can now roll 1 or 2 dice!" );
+                println!( "You got rid of all tiles above 6! You can now roll 1 or 2 dice!" );
                 game_box.print_active_tiles();
                 game_box.print_inactive_tiles();
 
